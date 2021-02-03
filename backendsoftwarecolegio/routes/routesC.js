@@ -7,39 +7,56 @@ router.get("/", (req, res) => {
   res.json([]);
 });
 
-router.get("/materias", async (req, res) => {
+//materias
+router.get("/adminmaterias", async (req, res) => {
   try {
     const client = await pg.connect();
-    const { rows } = await client.query('SELECT * FROM materias');
+    const { rows } = await client.query(`SELECT materias.codmateria,
+    materias.strmateria,
+    permisomateria(materias.id_materia ,1) as Primero,
+    permisomateria(materias.id_materia ,1) as Segundo,
+    permisomateria(materias.id_materia ,1) as Tercero,
+    permisomateria(materias.id_materia ,1) as Cuarto,
+    permisomateria(materias.id_materia ,1) as Quinto,
+    permisomateria(materias.id_materia ,1) as Sexto,
+    permisomateria(materias.id_materia ,1) as Septimo,
+    permisomateria(materias.id_materia ,1) as Octavo,
+    permisomateria(materias.id_materia ,1) as Noveno,
+    permisomateria(materias.id_materia ,1) as Decimo,
+    permisomateria(materias.id_materia ,1) as Once,
+    concat(cuenta.nombre,' ', cuenta.apellidos) as Profesor
+    FROM materias join profesores 
+    on profesores.id_profesor = materias.id_profesor join cuenta on  cuenta.id_cuenta = profesores.id_cuenta;`);
     res.json(rows);
     client.release();
   } catch (err) {
     res.json(err);
   }
 });
-/*
-router.post("/cambioaño", async (req, res) => {
-  try{
-  const client=await pg.connect();
-  const rows=await client.query('UPDATE estudiantes SET estado=true WHERE estado is NULL AND nota_prom>3;UPDATE estudiantes SET estado=false WHERE estado is NULL AND nota_prom<3; INSERT INTO estudiantes(nro_matricula, año, grupo, id_cuenta, año) SELECT estudiantes.nro_matricula,añovar() as año , grupocambio (estudiantes.estado, grupos.grado, grupos.cod_grupo) as grupo,estudiantes.id_cuenta, añovar() +1 as año FROM estudiantes join grupos on estudiantes.grupo = grupos.id_grupo where estudiantes.año=añovar() and grupos.año=añovar();');
-  res.json(rows);
-  client.release();
-}catch(err){
-  res.json(err);
-}
-});*/
+router.post("/adminmaterias", async (req, res) => {
+  try {
+    const client = await pg.connect();
+    const rows = await client.query('INSERT INTO materias()VALUES()');
+    res.json(rows);
+    client.release();13
+  } catch (err) {
+    res.json(err);
+  }
+});
+
+
 //Cambio de año
 router.put("/cambioaño", async (req, res) => {
   try {
     const client = await pg.connect();
-    const rows = await client.query(`UPDATE estudiantes SET nota_prom=notaestudiante(id_estudiante) WHERE estado is NULL;
-  UPDATE estudiantes SET estado=true WHERE estado is NULL AND nota_prom>3;
-  UPDATE estudiantes SET estado=false WHERE estado is NULL AND nota_prom<3;
-  INSERT INTO grupos (año, grado, cod_grupo, id_profesor) 
-  SELECT añovar()+1, grado, cod_grupo, id_profesor FROM grupos where año=añovar();
-  INSERT INTO estudiantes(nro_matricula, año, grupo, id_cuenta) 
-  SELECT estudiantes.nro_matricula,añovar()+1 as año , grupocambio (estudiantes.estado, grupos.grado, grupos.cod_grupo) as grupo,estudiantes.id_cuenta FROM estudiantes join grupos on estudiantes.grupo = grupos.id_grupo where (estudiantes.año=añovar() and grupos.año=añovar()) AND NOT(grupos.grado=11 AND estudiantes.estado=true);
-  UPDATE año SET año = (añovar()+1);`);
+    const rows = await client.query(`UPDATE estudiantes SET nota_prom=notaestudiante(id_estudiante) WHERE aprobado is NULL;
+    UPDATE estudiantes SET aprobado=true WHERE aprobado is NULL AND nota_prom>3;
+    UPDATE estudiantes SET aprobado=false WHERE aprobado is NULL AND nota_prom<3;
+    INSERT INTO grupos (año, grado, cod_grupo, id_profesor) 
+    SELECT añovar()+1, grado, cod_grupo, id_profesor FROM grupos where año=añovar();
+    INSERT INTO estudiantes(nro_matricula, año, grupo, id_cuenta) 
+    SELECT estudiantes.nro_matricula,añovar()+1 as año , grupocambio (estudiantes.aprobado, grupos.grado, grupos.cod_grupo) as grupo,estudiantes.id_cuenta FROM estudiantes join grupos on estudiantes.grupo = grupos.id_grupo where (estudiantes.año=añovar() and grupos.año=añovar()) AND NOT(grupos.grado=11 AND estudiantes.aprobado=true);
+    UPDATE año SET año = (añovar()+1);`);
     res.json(rows);
     client.release();
   } catch (err) {
