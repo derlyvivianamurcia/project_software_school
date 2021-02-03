@@ -34,17 +34,51 @@ router.get("/adminmaterias", async (req, res) => {
   }
 });
 router.post("/adminmaterias", async (req, res) => {
-  try {
+  const {codmateria, strmateria, id_profesor, permisos}=req.body;
+    try {
     const client = await pg.connect();
-    const rows = await client.query('INSERT INTO materias()VALUES()');
-    res.json(rows);
-    client.release();13
+    const rows = await client.query('INSERT INTO materias(codmateria, strmateria, id_profesor) VALUES($1,$2,$3)',{codmateria, strmateria, id_profesor});
+
+    let query='INSERT INTO materias_en_grado(id_materia,id_grado,permiso) VALUES';
+    for(let i=0;permisos.length>i;i++){
+      query+='((select log_cnt from sq_materias), '+(i+1)+', '+ permisos[i]+')'+(i!=(permisos.length-1)?',':'');
+    }
+    const rows2 = await client.query(query);
+    res.json([rows, rows2]);
+    client.release();
   } catch (err) {
     res.json(err);
   }
 });
+router.put("/adminmaterias/:id_materia", async (req, res) => {
+  const {codmateria, strmateria, id_profesor, permisos}=req.body;
+  const {id_materia}=req.params;
+    try {
+    const client = await pg.connect();
+    const rows = await client.query('UPDATE materias set codmateria=$1 , strmateria=$2, id_profesor=$3 WHERE  id_materia= $4',{codmateria, strmateria, id_profesor, id_materia});
 
-
+    let query='UPDATE materias_en_grado set permiso = ';
+    for(let i=0;permisos.length>i;i++){ 
+      query+= permisos[i]+' WHERE id_materia='+id_materia+' AND id_grado ='+ (i+1)+ ';';
+    }
+    const rows2 = await client.query(query);
+    res.json([rows, rows2]);
+    client.release();
+  } catch (err) {
+    res.json(err);
+  }
+});
+router.delete("/adminmaterias/:id_materia", async (req, res) => {
+  const {id_materia}=req.params;
+    try {
+    const client = await pg.connect();3
+    const rows = await client.query('DELETE materias WHERE id_materia= $1',{id_materia});
+    res.json(rows);
+    client.release();
+  } catch (err) {
+    res.json(err);
+  }
+});
 //Cambio de año
 router.put("/cambioaño", async (req, res) => {
   try {
@@ -56,7 +90,8 @@ router.put("/cambioaño", async (req, res) => {
     SELECT añovar()+1, grado, cod_grupo, id_profesor FROM grupos where año=añovar();
     INSERT INTO estudiantes(nro_matricula, año, grupo, id_cuenta) 
     SELECT estudiantes.nro_matricula,añovar()+1 as año , grupocambio (estudiantes.aprobado, grupos.grado, grupos.cod_grupo) as grupo,estudiantes.id_cuenta FROM estudiantes join grupos on estudiantes.grupo = grupos.id_grupo where (estudiantes.año=añovar() and grupos.año=añovar()) AND NOT(grupos.grado=11 AND estudiantes.aprobado=true);
-    UPDATE año SET año = (añovar()+1);`);
+    UPDATE año SET año = (añovar()+1);
+    ALTER SEQUENCE sq_matricula RESTART WITH 1`);
     res.json(rows);
     client.release();
   } catch (err) {
