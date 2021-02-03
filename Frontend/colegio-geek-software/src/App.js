@@ -13,8 +13,8 @@ import TechnicalColleges from './components/TechnicalColleges';
 import TechnicalSupport from './components/TechnicalSupport';
 import Help from './components/Help';
 import ProfileData from './components/user/ProfileData';
-import StudentApp from './components/student/StudentApp';
-import DocenteApp from './components/docente/DocenteApp';
+import DocenteApp from './components/profesor/ProfesorApp';
+
 
 export default class App extends Component { 
   render() {
@@ -35,7 +35,7 @@ export default class App extends Component {
             <Route path='/docente/grupo' exact render={(props) => <Main {...props} App = {this} contetent = {ProfileData}/>} />
             <Route exact path="/docente" component={DocenteApp} />
 
-            <Route path='/estudiantes/listado' exact render={(props) => <Main {...props} App = {this} contetent = {StudentApp}/>} />
+            <Route path='/docente/listado' exact render={(props) => <Main {...props} App = {this} contetent = {DocenteApp}/>} />
           </Switch>
           </div>
       </BrowserRouter>
