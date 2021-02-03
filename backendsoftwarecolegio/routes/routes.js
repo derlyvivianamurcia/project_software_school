@@ -1,7 +1,5 @@
-  
 const { Router } = require('express')
 const { pool } = require('./../db/db')
-var sha1 = require('sha1');
 const router = Router()
 
 //Servicio get cuentas
