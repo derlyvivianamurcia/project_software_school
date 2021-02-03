@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pg = require('./db/db').pool;
+const pg = require('./../db/db').pool;
 
 // Objeto de Guia
 router.get("/", (req, res) => {
