@@ -8,7 +8,7 @@ pg = require('./../db/db').pool;
 
 controller.listGrupos = async(req, res) => {
     const client = await pg.connect();
-    client.query(`SELECT * FROM grupos`, (err, resultSet) => {
+    client.query(`SELECT * FROM grupos WHERE id_grupo = $1`, (err, resultSet) => {
         (err) ? res.status(500).send('Se presento un error'):
             res.json(resultSet);
     });
@@ -41,19 +41,21 @@ controller.addGrupo = async (req, res) => {
 };
 
 //Consultar grupo
-/*
+
 controller.getGrupo = async (req, res) => {
     try {
         const { id } = req.params;
-        const grupo = await cnn_mysql.promise().execute(
-            `SELECT * FROM grupos WHERE id_grupo = ?`, [id]
+        const client = await pg.connect();
+        const grupo = await client.query.promise().execute(
+            `SELECT * FROM grupos WHERE id_grupo = $1`, [id]
         );
-        res.json(grupo[0]);
+        client.release();
+        res.json(grupo[1]);
     } catch (error) {
         console.error(error.message);
     }
 };
-*/
+
 //Actualizar grupo
 /*
 controller.updateGrupo = async (req, res) => {
