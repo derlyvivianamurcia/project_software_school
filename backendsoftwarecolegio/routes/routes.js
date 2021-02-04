@@ -202,9 +202,10 @@ router.post('/new-plan', async (req, res) => {
 router.put("/updateplan/:id_plan", async (req, res) => {
     const {cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia}=req.body;
       const {id_plan}=req.params;
-         try {
-        const client = await pg.connect();
-       const rows = await client.query('UPDATE plan SET cant_acti=$1, cant_proce=$2, cant_conceptual=$3, id_grupo=$4, id_materia=$5 WHERE id_plan= $6',{ cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia,}); 
+
+        try {
+        const client = await pool.connect();
+       const rows = await client.query('UPDATE plan SET cant_acti=$2, cant_proce=$3, cant_conceptual=$4, id_grupo=$5, id_materia=$6 WHERE id_plan= $1',[id_plan,cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia]); 
        res.json(rows);
        client.release();
      } catch (err) {

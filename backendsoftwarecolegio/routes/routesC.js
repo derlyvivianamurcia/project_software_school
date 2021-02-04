@@ -37,7 +37,7 @@ router.post("/adminmaterias", async (req, res) => {
   const {codmateria, strmateria, id_profesor, permisos}=req.body;
     try {
     const client = await pg.connect();
-    const rows = await client.query('INSERT INTO materias(codmateria, strmateria, id_profesor) VALUES($1,$2,$3)',{codmateria, strmateria, id_profesor});
+    const rows = await client.query('INSERT INTO materias(codmateria, strmateria, id_profesor) VALUES($1,$2,$3)',[codmateria, strmateria, id_profesor]);
 
     let query='INSERT INTO materias_en_grado(id_materia,id_grado,permiso) VALUES';
     for(let i=0;permisos.length>i;i++){
@@ -55,7 +55,7 @@ router.put("/adminmaterias/:id_materia", async (req, res) => {
   const {id_materia}=req.params;
     try {
     const client = await pg.connect();
-    const rows = await client.query('UPDATE materias set codmateria=$1 , strmateria=$2, id_profesor=$3 WHERE  id_materia= $4',{codmateria, strmateria, id_profesor, id_materia});
+    const rows = await client.query('UPDATE materias set codmateria=$1 , strmateria=$2, id_profesor=$3 WHERE  id_materia= $4',[codmateria, strmateria, id_profesor, id_materia]);
 
     let query='UPDATE materias_en_grado set permiso = ';
     for(let i=0;permisos.length>i;i++){ 
@@ -72,7 +72,7 @@ router.delete("/adminmaterias/:id_materia", async (req, res) => {
   const {id_materia}=req.params;
     try {
     const client = await pg.connect();3
-    const rows = await client.query('DELETE materias WHERE id_materia= $1',{id_materia});
+    const rows = await client.query('DELETE materias WHERE id_materia= $1',[id_materia]);
     res.json(rows);
     client.release();
   } catch (err) {
