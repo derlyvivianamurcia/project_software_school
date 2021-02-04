@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const pg = require('./../db/db').pool;
-const excel = requiere('xlsx');
-const pdf = requiere('html-pdf');
+const excel = require('xlsx');
+const pdf = require('html-pdf');
 // Objeto de Guia
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   const client = await pg.connect();
     const { rows } = await client.query(`SELECT materias.codmateria,
     materias.strmateria,
