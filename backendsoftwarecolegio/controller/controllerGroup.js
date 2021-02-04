@@ -5,14 +5,16 @@ pg = require('./../db/db').pool;
 //const { cnn_mysql } = require('../config/databasemysql');
 
 //Listar grupos
-/*
+
 controller.listGrupos = async(req, res) => {
-    cnn_mysql.query(`SELECT * FROM grupos`, (err, resultSet) => {
+    const client = await pg.connect();
+    client.query(`SELECT * FROM grupos`, (err, resultSet) => {
         (err) ? res.status(500).send('Se presento un error'):
             res.json(resultSet);
     });
+     client.release();
 };
-*/
+
 
 //Agregar grupo
 controller.addGrupo = async (req, res) => {
