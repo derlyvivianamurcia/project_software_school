@@ -5,15 +5,17 @@ pg = require('./../db/db').pool;
 //const { cnn_mysql } = require('../config/databasemysql');
 
 //Listar grupos
+/*
 controller.listGrupos = async(req, res) => {
     cnn_mysql.query(`SELECT * FROM grupos`, (err, resultSet) => {
         (err) ? res.status(500).send('Se presento un error'):
             res.json(resultSet);
     });
 };
+*/
 
 //Agregar grupo
-controller.addGrupo = async(req, res) => {
+controller.addGrupo = async (req, res) => {
     try {
         const {
             id_grupo,
@@ -21,15 +23,15 @@ controller.addGrupo = async(req, res) => {
             año
         } = req.body;
 
-        const client = awaitpg.connect();
-        const rows = await cnn_mysql.promise().execute(`INSERT INTO grupos(id_grupo, estado, año)
+        const client = await pg.connect();
+        const rows = await client.query(`INSERT INTO grupos(id_grupo, estado, año)
          VALUES ($1, $2, $3)`, [id_grupo, estado, año]);
-
+        client.release();
         (rows.affectedRows > 1) ? res.json({
             id_grupo: id_grupo,
             estado: estado,
             año: año,
-        }): res.json({});
+        }) : res.json({});
 
     } catch (err) {
         res.status(500).json({ errorCode: err.err, message: 'Error en el servidor.' });
@@ -37,7 +39,8 @@ controller.addGrupo = async(req, res) => {
 };
 
 //Consultar grupo
-controller.getGrupo = async(req, res) => {
+/*
+controller.getGrupo = async (req, res) => {
     try {
         const { id } = req.params;
         const grupo = await cnn_mysql.promise().execute(
@@ -48,9 +51,10 @@ controller.getGrupo = async(req, res) => {
         console.error(error.message);
     }
 };
-
+*/
 //Actualizar grupo
-controller.updateGrupo = async(req, res) => {
+/*
+controller.updateGrupo = async (req, res) => {
     try {
 
         const {
@@ -60,16 +64,17 @@ controller.updateGrupo = async(req, res) => {
         } = req.body;
 
         await cnn_mysql.promise().execute(`UPDATE groups SET estado=?, año=? WHERE id_grupo=?`,
-         [estado, año, id_grupo]);
+            [estado, año, id_grupo]);
 
         res.json('Grupo was update');
     } catch (err) {
         res.status(500).json({ errorCode: err.err, message: 'Error en el servidor.' });
     }
 };
-
+*/
 //Eliminar grupo
-controller.deleteGrupo = async(req, res) => {
+/*
+controller.deleteGrupo = async (req, res) => {
     try {
         const { id } = req.params;
         await cnn_mysql.promise().execute(`DELETE FROM grupos WHERE id_grupo = ?`, [id]);
@@ -78,5 +83,5 @@ controller.deleteGrupo = async(req, res) => {
         console.log(error.message);
     }
 };
-
+*/
 module.exports = controller;
