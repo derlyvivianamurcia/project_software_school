@@ -3,35 +3,90 @@ const router = express.Router();
 const pg = require('./../db/db').pool;
 const excel = require('xlsx');
 const pdf = require('html-pdf');
+const fs = require('fs');
 // Objeto de Guia
 router.get("/", async (req, res) => {
-  const client = await pg.connect();
-    const { rows } = await client.query(`SELECT materias.codmateria,
-    materias.strmateria,
-    permisomateria(materias.id_materia ,1) as Primero,
-    permisomateria(materias.id_materia ,1) as Segundo,
-    permisomateria(materias.id_materia ,1) as Tercero,
-    permisomateria(materias.id_materia ,1) as Cuarto,
-    permisomateria(materias.id_materia ,1) as Quinto,
-    permisomateria(materias.id_materia ,1) as Sexto,
-    permisomateria(materias.id_materia ,1) as Septimo,
-    permisomateria(materias.id_materia ,1) as Octavo,
-    permisomateria(materias.id_materia ,1) as Noveno,
-    permisomateria(materias.id_materia ,1) as Decimo,
-    permisomateria(materias.id_materia ,1) as Once,
-    concat(cuenta.nombre,' ', cuenta.apellidos) as Profesor
-    FROM materias join profesores 
-    on profesores.id_profesor = materias.id_profesor join cuenta on  cuenta.id_cuenta = profesores.id_cuenta;`);    
-    client.release();
-    let data = excel.utils.json_to_sheet(rows);
-    let libro= excel.utils.book_new();
-    excel.utils.book_append_sheet(libro, data, 'prueba');
-    excel.writeFile(libro,'prueba.xlsx');
-  res.json([]);
+    res.json([]);
 });
-router.get('/reportesprueba'
-
-);
+router.get('/reporteestudiantesxgrupo/:id_cuenta', async(req, res) => {
+    const {id_cuenta}=req.params;
+    const client = await pg.connect();
+    const grupos = await client.query(`UPDATE estudiantes SET nota_prom=notaestudiante(id_estudiante) WHERE aprobado is NULL;SELECT  grupos.id_grupo,
+    grados.id_grados,
+    grados.strgrado,
+    grupos.cod_grupo
+    FROM grupos join grados on grupos.grado= grados.id_grados where grupos.año = añovar() ORDER BY grados.id_grados, grupos.cod_grupo;`).then(resp=>resp.rows);    
+    let libro= excel.utils.book_new();
+    let name =`estudiantesxgrupo${id_cuenta}.xlsx`;
+    libro=await (async (book)=>{
+      for(let i=0; i<grupos.length;i++){      
+        const { rows } = await client.query(`SELECT 
+        concat(cuenta.nombre,' ', cuenta.apellidos) as Estudiantes,
+        cuenta.correo,
+        cuenta.fecha_de_nacimiento,
+        genero.str_genero as Genero,
+        tipo_documento.str_documento as Tipo_de_documento,
+        cuenta.nro_de_documento,
+        estudiantes.nota_prom as nota_promedio
+        FROM estudiantes join cuenta 
+        on estudiantes.id_cuenta = cuenta.id_cuenta join genero on genero.id_genero = cuenta.genero join tipo_documento on tipo_documento.id_documento = cuenta.tipo_de_documento where estudiantes.año = añovar() and cuenta.estado = true AND estudiantes.grupo=$1;`,[grupos[i].id_grupo]);
+        let data = excel.utils.json_to_sheet(rows);          
+        excel.utils.book_append_sheet(book, data, `${grupos[i].strgrado}-${grupos[i].cod_grupo}`);
+        };
+        return book;
+    })(libro);    
+    client.release();
+    excel.writeFile(libro,name);
+    res.download(`${__dirname}/../${name}`);
+    setTimeout(()=>{
+      try{
+        fs.unlinkSync(`./${name}`);
+        console.log('se elimino el archivo');
+        } catch(err){
+         console.log(err);
+       }
+    },2000);    
+    
+});
+router.get('/reportesestudiantesxgrado/:id_cuenta', async(req, res) => {
+    const {id_cuenta}=req.params;
+    const client = await pg.connect();
+    const grupos = await client.query(`UPDATE estudiantes SET nota_prom=notaestudiante(id_estudiante) WHERE aprobado is NULL;SELECT 
+    grados.id_grados,
+    grados.strgrado
+    FROM  grados where ORDER BY grados.id_grados`).then(resp=>resp.rows);    
+    let libro= excel.utils.book_new();
+    let name =`estudiantesxgrupo${id_cuenta}.xlsx`;
+    libro=await (async (book)=>{
+      for(let i=0; i<grupos.length;i++){      
+        const { rows } = await client.query(`SELECT 
+        concat(cuenta.nombre,' ', cuenta.apellidos) as Estudiantes,
+        cuenta.correo,
+        cuenta.fecha_de_nacimiento,
+        genero.str_genero as Genero,
+        tipo_documento.str_documento as Tipo_de_documento,
+        cuenta.nro_de_documento,
+        estudiantes.nota_prom as nota_promedio
+        FROM estudiantes join cuenta 
+        on estudiantes.id_cuenta = cuenta.id_cuenta join genero on genero.id_genero = cuenta.genero join tipo_documento on tipo_documento.id_documento = cuenta.tipo_de_documento where estudiantes.año = añovar() and cuenta.estado = true AND estudiantes.grupo=$1;`,[grupos[i].id_grupo]);
+        let data = excel.utils.json_to_sheet(rows);          
+        excel.utils.book_append_sheet(book, data, `${grupos[i].strgrado}-${grupos[i].cod_grupo}`);
+        };
+        return book;
+    })(libro);    
+    client.release();
+    excel.writeFile(libro,name);
+    res.download(`${__dirname}/../${name}`);
+    setTimeout(()=>{
+      try{
+        fs.unlinkSync(`./${name}`);
+        console.log('se elimino el archivo');
+        } catch(err){
+         console.log(err);
+       }
+    },2000);    
+    
+});
 //materias
 router.get("/adminmaterias", async (req, res) => {
   try {

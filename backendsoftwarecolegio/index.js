@@ -4,7 +4,7 @@ const app = express();
 const routes = require('./routes/routes');
 const routesC = require('./routes/routesC');
 const routesS = require('./routes/routesS');
-
+const routesEs = require('./routes/routesEs');
 require('dotenv').config();
 
 //Ajustes
@@ -17,7 +17,8 @@ app.use(express.json());
 //Routes
 app.use('/api', routes);
 app.use('/apic', routesC);
-app.use('/apiS', routesS)
+app.use('/apiS', routesS);
+app.use('/apies', routesEs);
 app.get('/', (req, res) => {
 	res.send('Hola!, conexión a base de datos software geek');
 });

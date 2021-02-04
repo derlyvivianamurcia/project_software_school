@@ -1,7 +1,6 @@
 const controller = {};
 
-const pool = require('../config/database');
-const { cnn_mysql } = require('../config/databasemysql');
+const {pool} = require('./../db/db');
 
 //Listar estudiantes
 controller.listStudents = async(req, res) => {

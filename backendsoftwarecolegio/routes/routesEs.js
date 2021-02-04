@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const studentsController = require('../controllers/controllerStudents');
+const studentsController = require('../controller/controllerStudents');
 
 router.get('/estudiantes', studentsController.listStudents);
 router.get('/estudiantes/:id', studentsController.getStudent);
