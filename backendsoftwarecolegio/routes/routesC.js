@@ -1,12 +1,37 @@
 const express = require('express');
 const router = express.Router();
 const pg = require('./../db/db').pool;
-
+const excel = requiere('xlsx');
+const pdf = requiere('html-pdf');
 // Objeto de Guia
 router.get("/", (req, res) => {
+  const client = await pg.connect();
+    const { rows } = await client.query(`SELECT materias.codmateria,
+    materias.strmateria,
+    permisomateria(materias.id_materia ,1) as Primero,
+    permisomateria(materias.id_materia ,1) as Segundo,
+    permisomateria(materias.id_materia ,1) as Tercero,
+    permisomateria(materias.id_materia ,1) as Cuarto,
+    permisomateria(materias.id_materia ,1) as Quinto,
+    permisomateria(materias.id_materia ,1) as Sexto,
+    permisomateria(materias.id_materia ,1) as Septimo,
+    permisomateria(materias.id_materia ,1) as Octavo,
+    permisomateria(materias.id_materia ,1) as Noveno,
+    permisomateria(materias.id_materia ,1) as Decimo,
+    permisomateria(materias.id_materia ,1) as Once,
+    concat(cuenta.nombre,' ', cuenta.apellidos) as Profesor
+    FROM materias join profesores 
+    on profesores.id_profesor = materias.id_profesor join cuenta on  cuenta.id_cuenta = profesores.id_cuenta;`);    
+    client.release();
+    let data = excel.utils.json_to_sheet(rows);
+    let libro= excel.utils.book_new();
+    excel.utils.book_append_sheet(libro, data, 'prueba');
+    excel.writeFile(libro,'prueba.xlsx');
   res.json([]);
 });
+router.get('/reportesprueba'
 
+);
 //materias
 router.get("/adminmaterias", async (req, res) => {
   try {
