@@ -197,6 +197,20 @@ router.post('/new-plan', async (req, res) => {
   }
 })
 
+//Servicio actualizar plan
+
+router.put("/updateplan/:id_plan", async (req, res) => {
+    const {cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia}=req.body;
+      const {id_plan}=req.params;
+         try {
+        const client = await pg.connect();
+       const rows = await client.query('UPDATE plan SET cant_acti=$2, cant_proce=$3, cant_conceptual=$4, id_grupo=$5, id_materia=$6 WHERE id_plan= $1',{ cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia,}); 
+       res.json(rows);
+       client.release();
+     } catch (err) {
+       res.json(err);
+     }
+   });
 
 module.exports= router;
 
