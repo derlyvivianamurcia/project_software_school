@@ -21,18 +21,20 @@ controller.addGrupo = async (req, res) => {
     try {
         const {
             id_grupo,
-            estado,
-            año
+            grado,
+            año,
+            cod_grupo
         } = req.body;
 
         const client = await pg.connect();
-        const rows = await client.query(`INSERT INTO grupos(id_grupo, estado, año)
-         VALUES ($1, $2, $3)`, [id_grupo, estado, año]);
+        const rows = await client.query(`INSERT INTO grupos(id_grupo, grado, año, cod_grupo)
+         VALUES ($1, $2, $3, $4)`, [id_grupo, grado, año, cod_grupo]);
         client.release();
         (rows.affectedRows > 1) ? res.json({
             id_grupo: id_grupo,
-            estado: estado,
+            grado: grado,
             año: año,
+            cod_grupo: cod_grupo,
         }) : res.json({});
 
     } catch (err) {
@@ -63,12 +65,13 @@ controller.updateGrupo = async (req, res) => {
 
         const {
             id_grupo,
-            estado,
-            año
+            grado,
+            año,
+            cod_grupo
         } = req.body;
         const client = await pool.connect();
-        await client.query.promise().execute(`UPDATE groups SET estado=$3, año=$2 WHERE id_grupo=$1`,
-            [estado, año, id_grupo]);
+        await client.query.promise().execute(`UPDATE groups SET grado=$3, año=$2 WHERE id_grupo=$1, cod_grupo=$4`,
+            [grado, año, id_grupo, cod_grupo]);
         client.release();
         res.json('Grupo was update');
     } catch (err) {
