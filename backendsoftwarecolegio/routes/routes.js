@@ -198,7 +198,6 @@ router.post('/new-plan', async (req, res) => {
 })
 
 //Servicio actualizar plan
-
 router.put("/updateplan/:id_plan", async (req, res) => {
     const {cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia}=req.body;
       const {id_plan}=req.params;
@@ -213,5 +212,21 @@ router.put("/updateplan/:id_plan", async (req, res) => {
      }
    });
 
-module.exports= router;
 
+   // Servicio actualizar profesor
+   router.put("/updateprofesor/:id_profesor", async (req, res) => {
+    const {id_cuenta, jornada}=req.body;
+      const {id_profesor}=req.params;
+
+        try {
+        const client = await pool.connect();
+       const rows = await client.query('UPDATE profesores SET id_cuenta=$2, jornada=$3 WHERE id_profesor= $1',[id_profesor, id_cuenta, jornada]); 
+       res.json(rows);
+       client.release();
+     } catch (err) {
+       res.json(err);
+     }
+   });
+
+module.exports= router;
+   
