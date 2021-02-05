@@ -45,18 +45,18 @@ router.get('/reporteestudiantesxgrupo/:id_cuenta', async(req, res) => {
         } catch(err){
          console.log(err);
        }
-    },2000);    
+    },3000);    
     
 });
 router.get('/reportesestudiantesxgrado/:id_cuenta', async(req, res) => {
     const {id_cuenta}=req.params;
     const client = await pg.connect();
-    const grupos = await client.query(`UPDATE estudiantes SET nota_prom=notaestudiante(id_estudiante) WHERE aprobado is NULL;SELECT 
+    const grados = await client.query(`UPDATE estudiantes SET nota_prom=notaestudiante(id_estudiante) WHERE aprobado is NULL;SELECT 
     grados.id_grados,
     grados.strgrado
     FROM  grados where ORDER BY grados.id_grados`).then(resp=>resp.rows);    
     let libro= excel.utils.book_new();
-    let name =`estudiantesxgrupo${id_cuenta}.xlsx`;
+    let name =`estudiantesxgrado${id_cuenta}.xlsx`;
     libro=await (async (book)=>{
       for(let i=0; i<grupos.length;i++){      
         const { rows } = await client.query(`SELECT 
@@ -66,11 +66,16 @@ router.get('/reportesestudiantesxgrado/:id_cuenta', async(req, res) => {
         genero.str_genero as Genero,
         tipo_documento.str_documento as Tipo_de_documento,
         cuenta.nro_de_documento,
-        estudiantes.nota_prom as nota_promedio
-        FROM estudiantes join cuenta 
-        on estudiantes.id_cuenta = cuenta.id_cuenta join genero on genero.id_genero = cuenta.genero join tipo_documento on tipo_documento.id_documento = cuenta.tipo_de_documento where estudiantes.año = añovar() and cuenta.estado = true AND estudiantes.grupo=$1;`,[grupos[i].id_grupo]);
+        estudiantes.nota_prom as nota_promedio,
+        concat(grados.strgrado,'-', grupos.cod_grupo) as grupo
+        FROM estudiantes join cuenta on estudiantes.id_cuenta = cuenta.id_cuenta 
+        join genero on genero.id_genero = cuenta.genero 
+        join tipo_documento on tipo_documento.id_documento = cuenta.tipo_de_documento 
+        join grupos on grupos.id_grupo = estudiantes.grupo
+        join grados on grupos.grado = grados.id_grados
+        where estudiantes.año = añovar() and cuenta.estado = true AND grupos.grado=$1;`,[grados[i].id_grupo]);
         let data = excel.utils.json_to_sheet(rows);          
-        excel.utils.book_append_sheet(book, data, `${grupos[i].strgrado}-${grupos[i].cod_grupo}`);
+        excel.utils.book_append_sheet(book, data, `${grados[i].strgrado}`);
         };
         return book;
     })(libro);    
@@ -84,8 +89,30 @@ router.get('/reportesestudiantesxgrado/:id_cuenta', async(req, res) => {
         } catch(err){
          console.log(err);
        }
-    },2000);    
+    },3000);    
     
+});
+
+router.get('/reportecantidadxgrado/:id_cuenta', async(req, res) => {
+  const {id_cuenta}=req.params;
+  const client = await pg.connect();
+  const {rows} = await client.query('Select grados.strgrado as grado, Count(estudiantes.id_estudiante) as "Cantidad estudiantes" from grados left join grupos on grupos.grado = grados.id_grados left join estudiantes on estudiantes.grupo = grupos.id_grupo left join cuenta on cuenta.id_cuenta  = estudiantes.id_cuenta where estudiantes.aprobado is null and (cuenta.estado = true or cuenta.estado is null)   group by grados.id_grados, estudiantes.año order by grados.id_grados');
+  let libro= excel.utils.book_new();
+  let name =`cantidadxgrado${id_cuenta}.xlsx`;
+  let data = excel.utils.json_to_sheet(rows);          
+  excel.utils.book_append_sheet(book, data, `Conteo`);    
+  client.release();
+  excel.writeFile(libro,name);
+  res.download(`${__dirname}/../${name}`);
+  setTimeout(()=>{
+    try{
+      fs.unlinkSync(`./${name}`);
+      console.log('se elimino el archivo');
+      } catch(err){
+       console.log(err);
+     }
+  },3000);    
+  
 });
 //materias
 router.get("/adminmaterias", async (req, res) => {
