@@ -243,5 +243,18 @@ router.put("/updatenota/:id_nota", async (req, res) => {
     }
 });
 
+// 
+router.delete("/deleletprofesor/:id_profesor", async (req, res) => {
+  const {id_profesor}=req.params;
+  try {
+  const client = await pool.connect();
+  const rows = await client.query('DELETE profesores WHERE id_profesor= $1',[id_profesor]);
+  res.json(rows);
+  client.release();
+} catch (err) {
+  res.json(err);
+}
+});
+
 module.exports = router;
 
