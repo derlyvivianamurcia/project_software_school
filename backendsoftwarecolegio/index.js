@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
+const cors = require("cors");
+
 const routes = require('./routes/routes');
 const routesC = require('./routes/routesC');
 const routesS = require('./routes/routesS');
@@ -13,7 +15,7 @@ app.set('port', process.env.PORT || 3000);
 //Middlewares
 app.use(morgan('dev'));
 app.use(express.json());
-
+app.use(cors({origin: '*'}));
 //Routes
 app.use('/api', routes);
 app.use('/apic', routesC);
