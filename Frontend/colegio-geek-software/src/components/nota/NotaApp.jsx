@@ -227,6 +227,19 @@ export default class NotaApp extends Component {
           <Modal.Body>
            
             <Form.Row>
+            <Form.Group as={Col} controlId="id_nota">
+                <Form.Label>Identificador *</Form.Label>
+                <Form.Control
+                  type="text"
+                  minLength="7"
+                  maxLength="11"
+                  name="id_nota"
+                  placeholder="Identificador nota"
+                  onChange={this.handleChange}
+                  value={form ? form.id_nota : ""}
+                  required
+                />
+                 </Form.Group>
               <Form.Group as={Col} controlId="valor">
                 <Form.Label>Valor *</Form.Label>
                 <Form.Control

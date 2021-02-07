@@ -77,7 +77,7 @@ export default class PlanApp extends Component {
 // debo llamar algo que me seleccione el estudiante selecciona estudiante
   peticionPut = () => {
     axios
-      .put(`${url}plan/${this.state.idplan}`, this.state.form)
+      .put(`${url}updateplan/${this.state.idplan}`, this.state.form)
       .then((response) => {
         this.showModal(); //cierre el modal
         this.peticionGet(); //haga lo peticion get para que tenga los datos actualizados 
