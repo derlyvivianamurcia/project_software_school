@@ -34,10 +34,9 @@ class SideBar extends React.Component {
             title="Docente"
             icon={faCopy}
             items={[
-              {text : "Grupos", link:'/estudiantes/listado'}, 
-              {text : "Notas", link: '/docente'}, 
-              {text : "Plan de estudio", link:""}, 
-              {text : "Perfil", link : ""}
+              {text : "Grupos", link:'/grupos'}, 
+              {text : "Notas", link: '/notas'}, 
+              {text : "Plan de estudio", link:"/plan"}, 
             ]}
           />
 
