@@ -143,23 +143,23 @@ router.post('/new-nota', async (req, res) => {
 })
 
 // Servicio registar grupos
-router.post('/new-grupos', async (req, res) => {
+router.post('/new-grupo', async (req, res) => {
     try {
         const {
-            id_grupo, año, grado, cod_grupo, id_profesor
+            id_grupo, año, grado, cod_grupo,  id_profesor
         } = req.body
         const client = await pool.connect()
-        const response = await client.query(`INSERT INTO grupos (id_grupo, año, grado, cod_grupo, id_profesor)  VALUES ($1, $2, $3, $4, $5) RETURNING id_grupo`, [id_grupo, año, grado, cod_grupo, id_profesor])
+        const response = await client.query(`INSERT INTO grupos(id_grupo, año, grado, cod_grupo,  id_profesor)  VALUES ($1, $2, $3, $4, $5) RETURNING id_grupo`, [ id_grupo, año, grado, cod_grupo,  id_profesor])
 
         // console.log(response)
         if (response.rowCount > 0) {
             res.json({
-                id_grupo: response.rows[0].id_grupo,
-                año: valor,
-                grado: grado,
-                cod_grupo: cod_grupo,
+                id_grupo:response.rows[0].id_grupo,
+                año:año,
+                grado: grado, 
+                cod_grupo: cod_grupo,  
                 id_profesor: id_profesor
-            })
+                     })
         } else {
             res.json({})
         }
@@ -169,7 +169,7 @@ router.post('/new-grupos', async (req, res) => {
     }
 })
 
-// Servicio registar grupos
+// Servicio registar plan
 router.post('/new-plan', async (req, res) => {
     try {
         const {
@@ -255,6 +255,20 @@ router.delete("/deleletprofesor/:id_profesor", async (req, res) => {
   res.json(err);
 }
 });
+
+router.delete("/deletegrupo/:id_grupo", async (req, res) => {
+    const {id_grupo}=req.params;
+    try {
+    const client = await pool.connect();
+    const rows = await client.query('DELETE grupos WHERE id_grupo= $1',[id_grupo]);
+    res.json(rows);
+    client.release();
+  } catch (err) {
+    res.json(err);
+  }
+  });
+
+
 
 module.exports = router;
 
