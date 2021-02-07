@@ -7,20 +7,21 @@ import { Link } from "react-router-dom";
 
 const url = "http://localhost:4001/api/"
 
-export default class GruposApp extends Component {
+export default class PlanApp extends Component {
   // los estados esta el formulario, modaleliminar, 
   state = {
-    grupo: [],
+    plan: [],
     show: false, 
     modalEliminar: false, 
     form: {
-      id: "",
-      grado: "",
-      id_profesor: "",
-      cod_grupo: "",
+      cant_acti: "",
+      cant_proce: "",
+      cant_conceptual: "",
+      id_grupo: "",
+      id_material: "",
       tipoModal: "" //Selecciona si vamos a hacer un Post o un PUT dependiendo del boton que se oprima
     },
-    id_grupo: "" //Me permite identificar que estudiante voy a actualizar o eliminar
+    idplan: "" //Me permite identificar que estudiante voy a actualizar o eliminar
   
   };
 
@@ -48,9 +49,9 @@ export default class GruposApp extends Component {
 // utilizando fecht se tiene que convertir a un json para obtener los datos 
 //mejor momento component
   peticionGet = () => {
-    fetch(`${url}grupo`)
+    fetch(`${url}plan`)
       .then((response) => response.json())
-      .then((grupo) => this.setState({ grupo: grupo }))
+      .then((plan) => this.setState({ plan: plan }))
       .catch((error) => {
         console.log(error.message);
       });
@@ -60,7 +61,7 @@ export default class GruposApp extends Component {
 
   peticionPost = async () => {
     await axios
-      .post(`${url}grupo`, this.state.form)
+      .post(`${url}plan`, this.state.form)
       .then((response) => {
         this.showModal();
         this.peticionGet();
@@ -74,7 +75,7 @@ export default class GruposApp extends Component {
 // debo llamar algo que me seleccione el estudiante selecciona estudiante
   peticionPut = () => {
     axios
-      .put(`${url}grupo/${this.state.id_grupo}`, this.state.form)
+      .put(`${url}plan/${this.state.idplan}`, this.state.form)
       .then((response) => {
         this.showModal(); //cierre el modal
         this.peticionGet(); //haga lo peticion get para que tenga los datos actualizados 
@@ -88,7 +89,7 @@ export default class GruposApp extends Component {
 
   peticionDelete = () => {
     axios
-      .delete(`${url}grupo/${this.state.id_grupo}`, this.state.form)
+      .delete(`${url}plan/${this.state.plan}`, this.state.form)
       .then((response) => {
         this.setState({ modalEliminar: false }); // cambia el modal eliminar porque no tengo showmodal modal eliminar lo controlo con el estado 
         this.peticionGet();
@@ -104,7 +105,7 @@ export default class GruposApp extends Component {
   seleccionarEstudiante = (estudianteMod) => {
     //Encuentra el id del estudiante selccionado
   /*   console.log(estudianteMod); */
-    const grupo = this.state.grupo.find(
+    const plan = this.state.plan.find(
       (result) => result.id === estudianteMod
     );
 //no capturo el id del formulario,.faind, ud tiene un estudiante para modificar entonces vaya y compruebe si coinicide con el resultado ue ud tiene
@@ -115,14 +116,15 @@ export default class GruposApp extends Component {
       //id estudiante modifique por este dato
 //modifico el estado //cuando lo tenga en el estado voy a la peticion y pongo ese id que esta en el estado y carge los datos en el estado 
 
-      id_grupo: grupo.id,
+      id_plan: plan.id,
       tipoModal: "actualizar",
       form: {
       
-        grado: grupo.grado,
-        año: grupo.año,
-        cod_grupo: grupo.cod_grupo,
-        id_profesor: grupo.id_profesor,
+        cant_acti: plan.cant_acti,
+        cant_proce: plan.cant_proce,
+        cant_conceptual: plan.cant_conceptual,
+        id_grupo: plan.id_grupo,
+        id_materia: plan.id_materia
       }
     });
   };
@@ -137,24 +139,22 @@ export default class GruposApp extends Component {
     const { form } = this.state;
     return (
       <>
-      
-        {/*INICIO Tabla*/}
-      
-       
-
-     
+          
         <table className="table">
        
           <thead>
-          <h1 >Listado de Grupos</h1>
+          <h1 >Plan de estudio</h1>
             <tr>
               <th>#</th>
-              <th>Año</th>
-              <th>Grado</th>
-               <th>Cód. Grupo</th>
-              <th>Ident. Profesor</th>
-              <th>Accion</th>
-                      
+              <th>Cant. Acti </th>
+              <th>Cant. Proce</th>
+               <th>Cant. Conceptual</th>
+              <th>Id. Grupo</th>
+              <th>Id. Materia</th>
+              <th>Acción</th>
+   
+              
+              
              <th> <Button
           className="btn btn-success"
           onClick={() => {
@@ -163,19 +163,21 @@ export default class GruposApp extends Component {
             this.showModal();
           }}
         >
-          Nuevo Grupo
+          Nuevo Plan
         </Button></th>
             </tr>
           </thead>
           <tbody>
-            {this.state.grupo.map((data) => {
+            {this.state.plan.map((data) => {
               return (
                 <tr >
+                  <td>{data.id_plan}</td>
+                  <td>{data.cant_acti}</td>
+                  <td>{data.cant_proce}</td>
+                  <td>{data.cant_conceptual}</td>
                   <td>{data.id_grupo}</td>
-                  <td>{data.año}</td>
-                  <td>{data.grado}</td>
-                  <td>{data.cod_grupo}</td>
-                  <td>{data.id_profesor}</td>
+                  <td>{data.id_materia}</td>
+
                   <td>
                     <button
                       className="btn btn-primary"
@@ -220,7 +222,7 @@ export default class GruposApp extends Component {
 
         <Modal show={this.state.show} animation={false}>
           <Modal.Header>
-            <Modal.Title>Nuevo Grupo</Modal.Title>
+            <Modal.Title>Nuevo Plan</Modal.Title>
           </Modal.Header>
           <Modal.Body>
            
@@ -240,7 +242,7 @@ export default class GruposApp extends Component {
               </Form.Group>
 
               <Form.Group as={Col} controlId="año">
-                <Form.Label>Año *</Form.Label>
+                <Form.Label>Cantidad actividad *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
@@ -257,7 +259,7 @@ export default class GruposApp extends Component {
             <Form.Row>
             
             <Form.Group as={Col} controlId="grupo">
-                <Form.Label>Grupo *</Form.Label>
+                <Form.Label>Cantidad procedimental *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
@@ -273,7 +275,7 @@ export default class GruposApp extends Component {
 
             <Form.Row>
               <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Código de grupo</Form.Label>
+                <Form.Label>Cantidad proc</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="5"
@@ -286,7 +288,20 @@ export default class GruposApp extends Component {
                 />
               </Form.Group>
               <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Código profesor</Form.Label>
+                <Form.Label>Código Grupo</Form.Label>
+                <Form.Control
+                  type="text"
+                  minLength="5"
+                  maxLength="11"
+                  placeholder="código del grupo"
+                  name="cod_grupo"
+                  //si el formulario tiene valores pongan o ponga vacio sino
+                  onChange={this.handleChange}
+                  value={form ? form.cod_grupo : ""}
+                />
+              </Form.Group>
+              <Form.Group as={Col} controlId="cod_grupo">
+                <Form.Label>Código Grupo</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="5"
