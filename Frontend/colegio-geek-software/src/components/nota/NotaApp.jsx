@@ -351,7 +351,6 @@ export default class NotaApp extends Component {
           </Modal.Footer>
         </Modal>
 
-        {/* Fin Modal del Botón Eliminar */}
       </>
     );
   }
