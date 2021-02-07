@@ -3,6 +3,7 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import 'font-awesome/css/font-awesome.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/MTApp.css'
+import './styles.css'
 import Login from './components/Login'
 import RecoverPassword from './components/RecoverPassword'
 import StartApp from './components/StartApp'
@@ -15,6 +16,7 @@ import Help from './components/Help';
 import ProfileData from './components/user/ProfileData';
 import StudentApp from './components/student/StudentApp';
 import DocenteApp from './components/docente/DocenteApp';
+import GruposApp from './components/grupos/GruposApp';
 
 export default class App extends Component { 
   render() {
@@ -34,6 +36,7 @@ export default class App extends Component {
             <Route path='/usuario/perfil' exact render={(props) => <Main {...props} App = {this} contetent = {ProfileData}/>} />
             <Route path='/docente/grupo' exact render={(props) => <Main {...props} App = {this} contetent = {ProfileData}/>} />
             <Route exact path="/docente" component={DocenteApp} />
+            <Route exact path="/grupos" component={GruposApp} />
 
             <Route path='/estudiantes/listado' exact render={(props) => <Main {...props} App = {this} contetent = {StudentApp}/>} />
           </Switch>
