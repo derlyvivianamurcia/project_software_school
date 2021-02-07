@@ -5,7 +5,6 @@ import {
   faBriefcase,
   faPaperPlane,
   faQuestion,
-  faImage,
   faCopy
 } from "@fortawesome/free-solid-svg-icons";
 import SubMenu from "./SubMenu";

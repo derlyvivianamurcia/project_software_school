@@ -3,12 +3,13 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button, Form, Col } from "react-bootstrap";
+import Bar from '/src/components/Bar';
 import { Link } from "react-router-dom";
-
 const url = "http://localhost:4001/api/"
 
 export default class PlanApp extends Component {
   // los estados esta el formulario, modaleliminar, 
+  
   state = {
     plan: [],
     show: false, 
@@ -25,6 +26,7 @@ export default class PlanApp extends Component {
   
   };
 
+  
   //1 para manejar los cambios del formulario
 // lee todo que tiene los campos
   handleChange = async (e) => {
@@ -139,10 +141,11 @@ export default class PlanApp extends Component {
     const { form } = this.state;
     return (
       <>
-          
+
         <table className="table">
        
           <thead>
+          <Bar/>
           <h1 >Plan de estudio</h1>
             <tr>
               <th>#</th>
