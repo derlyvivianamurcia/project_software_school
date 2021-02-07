@@ -63,7 +63,7 @@ export default class PlanApp extends Component {
 
   peticionPost = async () => {
     await axios
-      .post(`${url}plan`, this.state.form)
+      .post(`${url}new-plan`, this.state.form)
       .then((response) => {
         this.showModal();
         this.peticionGet();
@@ -230,30 +230,30 @@ export default class PlanApp extends Component {
           <Modal.Body>
            
             <Form.Row>
-              <Form.Group as={Col} controlId="documento">
+              <Form.Group as={Col} controlId="id_plan">
                 <Form.Label>Identificador *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
                   maxLength="11"
-                  name="documento"
-                  placeholder="Documento de identidad"
+                  name="id_plan"
+                  placeholder="Identificador"
                   onChange={this.handleChange}
-                  value={form ? form.documento : ""}
+                  value={form ? form.id_plan : ""}
                   required
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId="año">
+              <Form.Group as={Col} controlId="cant_acti">
                 <Form.Label>Cantidad actividad *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
                   maxLength="11"
-                  name="año"
-                  placeholder="Año"
+                  name="cant_acti"
+                  placeholder="cant_acti"
                   onChange={this.handleChange}
-                  value={form ? form.año : ""}
+                  value={form ? form.cant_acti : ""}
                   required
                 />
               </Form.Group>
@@ -261,59 +261,59 @@ export default class PlanApp extends Component {
 
             <Form.Row>
             
-            <Form.Group as={Col} controlId="grupo">
+            <Form.Group as={Col} controlId="cant_proce">
                 <Form.Label>Cantidad procedimental *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
                   maxLength="11"
-                  name="grupo"
-                  placeholder="Grupo"
+                  name="cant_proce"
+                  placeholder="Cantidad proced."
                   onChange={this.handleChange}
-                  value={form ? form.grupo : ""}
+                  value={form ? form.cant_proce : ""}
                   required
                 />
               </Form.Group>
             </Form.Row>
 
             <Form.Row>
-              <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Cantidad proc</Form.Label>
+              <Form.Group as={Col} controlId="cant_conceptual">
+                <Form.Label>Cantidad conceptual</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="5"
                   maxLength="11"
-                  placeholder="código del grupo"
-                  name="cod_grupo"
+                  placeholder="Cantidad conceptual"
+                  name="cant_conceptual"
                   //si el formulario tiene valores pongan o ponga vacio sino
                   onChange={this.handleChange}
-                  value={form ? form.cod_grupo : ""}
+                  value={form ? form.cant_conceptual : ""}
                 />
               </Form.Group>
-              <Form.Group as={Col} controlId="cod_grupo">
+              <Form.Group as={Col} controlId="id_grupo">
                 <Form.Label>Código Grupo</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="5"
                   maxLength="11"
                   placeholder="código del grupo"
-                  name="cod_grupo"
+                  name="id_grupo"
                   //si el formulario tiene valores pongan o ponga vacio sino
                   onChange={this.handleChange}
-                  value={form ? form.cod_grupo : ""}
+                  value={form ? form.id_grupo : ""}
                 />
               </Form.Group>
-              <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Código Grupo</Form.Label>
+              <Form.Group as={Col} controlId="id_materia">
+                <Form.Label>Código Materia</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="5"
                   maxLength="11"
-                  placeholder="código del grupo"
-                  name="cod_grupo"
+                  placeholder="código materia"
+                  name="id_materia"
                   //si el formulario tiene valores pongan o ponga vacio sino
                   onChange={this.handleChange}
-                  value={form ? form.cod_grupo : ""}
+                  value={form ? form.id_materia : ""}
                 />
               </Form.Group>
             </Form.Row>
@@ -351,7 +351,7 @@ export default class PlanApp extends Component {
 
         <Modal show={this.state.modalEliminar}>
           <Modal.Body>
-            Estás seguro que deseas eliminar a la empresa {form && form.nombre}
+            Estás seguro que deseas eliminar {form && form.nombre}
           </Modal.Body>
           <Modal.Footer>
             <button

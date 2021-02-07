@@ -335,7 +335,7 @@ export default class GruposApp extends Component {
 
         <Modal show={this.state.modalEliminar}>
           <Modal.Body>
-            Estás seguro que deseas eliminar a la empresa {form && form.nombre}
+            Estás seguro que deseas eliminar  {form && form.nombre}
           </Modal.Body>
           <Modal.Footer>
             <button

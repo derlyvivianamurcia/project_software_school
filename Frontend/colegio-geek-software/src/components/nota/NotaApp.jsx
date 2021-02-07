@@ -61,7 +61,7 @@ export default class NotaApp extends Component {
 
   peticionPost = async () => {
     await axios
-      .post(`${url}nota`, this.state.form)
+      .post(`${url}new-nota`, this.state.form)
       .then((response) => {
         this.showModal();
         this.peticionGet();
@@ -222,35 +222,35 @@ export default class NotaApp extends Component {
 
         <Modal show={this.state.show} animation={false}>
           <Modal.Header>
-            <Modal.Title>Nuevo Grupo</Modal.Title>
+            <Modal.Title>Registrar Nota</Modal.Title>
           </Modal.Header>
           <Modal.Body>
            
             <Form.Row>
-              <Form.Group as={Col} controlId="documento">
-                <Form.Label>Identificador *</Form.Label>
+              <Form.Group as={Col} controlId="valor">
+                <Form.Label>Valor *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
                   maxLength="11"
-                  name="documento"
-                  placeholder="Documento de identidad"
+                  name="valor"
+                  placeholder="Valor de la nota"
                   onChange={this.handleChange}
-                  value={form ? form.documento : ""}
+                  value={form ? form.valor : ""}
                   required
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId="año">
-                <Form.Label>Año *</Form.Label>
+              <Form.Group as={Col} controlId="componente">
+                <Form.Label>Componente *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
                   maxLength="11"
-                  name="año"
-                  placeholder="Año"
+                  name="componente"
+                  placeholder="Componente"
                   onChange={this.handleChange}
-                  value={form ? form.año : ""}
+                  value={form ? form.componente : ""}
                   required
                 />
               </Form.Group>
@@ -258,48 +258,36 @@ export default class NotaApp extends Component {
 
             <Form.Row>
             
-            <Form.Group as={Col} controlId="grupo">
-                <Form.Label>Grupo *</Form.Label>
+            <Form.Group as={Col} controlId="id_materia">
+                <Form.Label>Código materia *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
                   maxLength="11"
-                  name="grupo"
-                  placeholder="Grupo"
+                  name="id_materia"
+                  placeholder="Código materia"
                   onChange={this.handleChange}
-                  value={form ? form.grupo : ""}
+                  value={form ? form.id_materia : ""}
                   required
                 />
               </Form.Group>
             </Form.Row>
 
             <Form.Row>
-              <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Código de grupo</Form.Label>
+              <Form.Group as={Col} controlId="matricula_estudiante">
+                <Form.Label>Matricula estudiante</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="5"
                   maxLength="11"
-                  placeholder="código del grupo"
-                  name="cod_grupo"
+                  placeholder="Matricula estudiante"
+                  name="matricula_estudiante"
                   //si el formulario tiene valores pongan o ponga vacio sino
                   onChange={this.handleChange}
-                  value={form ? form.cod_grupo : ""}
+                  value={form ? form.matricula_estudiante : ""}
                 />
               </Form.Group>
-              <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Código profesor</Form.Label>
-                <Form.Control
-                  type="text"
-                  minLength="5"
-                  maxLength="11"
-                  placeholder="código del grupo"
-                  name="cod_grupo"
-                  //si el formulario tiene valores pongan o ponga vacio sino
-                  onChange={this.handleChange}
-                  value={form ? form.cod_grupo : ""}
-                />
-              </Form.Group>
+              
             </Form.Row>
           </Modal.Body>
           <Modal.Footer>
@@ -335,7 +323,7 @@ export default class NotaApp extends Component {
 
         <Modal show={this.state.modalEliminar}>
           <Modal.Body>
-            Estás seguro que deseas eliminar a la empresa {form && form.nombre}
+            Estás seguro que deseas eliminar  {form && form.nombre}
           </Modal.Body>
           <Modal.Footer>
             <button
