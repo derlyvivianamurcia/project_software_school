@@ -146,7 +146,7 @@ export default class NotaApp extends Component {
         <table className="table">
        
           <thead>
-          <h1 >Listado de Grupos</h1>
+          <h1 >Listado de Notas</h1>
             <tr>
               <th>#</th>
               <th>Valor</th>
@@ -163,7 +163,7 @@ export default class NotaApp extends Component {
             this.showModal();
           }}
         >
-          Nuevo Grupo
+          Registrar nota
         </Button></th>
             </tr>
           </thead>
