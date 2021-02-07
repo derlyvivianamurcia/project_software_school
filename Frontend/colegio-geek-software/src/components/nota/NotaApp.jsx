@@ -7,21 +7,20 @@ import { Link } from "react-router-dom";
 
 const url = "http://localhost:4001/api/"
 
-export default class PlanApp extends Component {
+export default class NotaApp extends Component {
   // los estados esta el formulario, modaleliminar, 
   state = {
-    plan: [],
+    notas: [],
     show: false, 
     modalEliminar: false, 
     form: {
-      cant_acti: "",
-      cant_proce: "",
-      cant_conceptual: "",
-      id_grupo: "",
-      id_material: "",
+      valor: "",
+      componente: "",
+      id_materia: "",
+      matricula_estudiante: "",
       tipoModal: "" //Selecciona si vamos a hacer un Post o un PUT dependiendo del boton que se oprima
     },
-    idplan: "" //Me permite identificar que estudiante voy a actualizar o eliminar
+    id_nota: "" //Me permite identificar que estudiante voy a actualizar o eliminar
   
   };
 
@@ -49,9 +48,9 @@ export default class PlanApp extends Component {
 // utilizando fecht se tiene que convertir a un json para obtener los datos 
 //mejor momento component
   peticionGet = () => {
-    fetch(`${url}plan`)
+    fetch(`${url}nota`)
       .then((response) => response.json())
-      .then((plan) => this.setState({ plan: plan }))
+      .then((notas) => this.setState({ notas: notas }))
       .catch((error) => {
         console.log(error.message);
       });
@@ -61,7 +60,7 @@ export default class PlanApp extends Component {
 
   peticionPost = async () => {
     await axios
-      .post(`${url}plan`, this.state.form)
+      .post(`${url}nota`, this.state.form)
       .then((response) => {
         this.showModal();
         this.peticionGet();
@@ -75,7 +74,7 @@ export default class PlanApp extends Component {
 // debo llamar algo que me seleccione el estudiante selecciona estudiante
   peticionPut = () => {
     axios
-      .put(`${url}plan/${this.state.idplan}`, this.state.form)
+      .put(`${url}nota/${this.state.id_notas}`, this.state.form)
       .then((response) => {
         this.showModal(); //cierre el modal
         this.peticionGet(); //haga lo peticion get para que tenga los datos actualizados 
@@ -89,7 +88,7 @@ export default class PlanApp extends Component {
 
   peticionDelete = () => {
     axios
-      .delete(`${url}plan/${this.state.plan}`, this.state.form)
+      .delete(`${url}nota/${this.state.id_notas}`, this.state.form)
       .then((response) => {
         this.setState({ modalEliminar: false }); // cambia el modal eliminar porque no tengo showmodal modal eliminar lo controlo con el estado 
         this.peticionGet();
@@ -105,7 +104,7 @@ export default class PlanApp extends Component {
   seleccionarEstudiante = (estudianteMod) => {
     //Encuentra el id del estudiante selccionado
   /*   console.log(estudianteMod); */
-    const plan = this.state.plan.find(
+    const nota = this.state.nota.find(
       (result) => result.id === estudianteMod
     );
 //no capturo el id del formulario,.faind, ud tiene un estudiante para modificar entonces vaya y compruebe si coinicide con el resultado ue ud tiene
@@ -116,15 +115,14 @@ export default class PlanApp extends Component {
       //id estudiante modifique por este dato
 //modifico el estado //cuando lo tenga en el estado voy a la peticion y pongo ese id que esta en el estado y carge los datos en el estado 
 
-      id_plan: plan.id,
+      id_plan: nota.id,
       tipoModal: "actualizar",
       form: {
       
-        cant_acti: plan.cant_acti,
-        cant_proce: plan.cant_proce,
-        cant_conceptual: plan.cant_conceptual,
-        id_grupo: plan.id_grupo,
-        id_materia: plan.id_materia
+        valor: nota.valor,
+        componente: nota.componente,        
+        id_materia: nota.id_materia,
+        matricula_estudiante: nota.matricula_estudiante
       }
     });
   };
@@ -139,22 +137,24 @@ export default class PlanApp extends Component {
     const { form } = this.state;
     return (
       <>
-          
+      
+        {/*INICIO Tabla*/}
+      
+       
+
+     
         <table className="table">
        
           <thead>
-          <h1 >Plan de estudio</h1>
+          <h1 >Listado de Grupos</h1>
             <tr>
               <th>#</th>
-              <th>Cant. Acti </th>
-              <th>Cant. Proce</th>
-               <th>Cant. Conceptual</th>
-              <th>Id. Grupo</th>
-              <th>Id. Materia</th>
+              <th>Valor</th>
+              <th>Componente</th>
+               <th>Materia</th>
+              <th>Matricula Estudiante</th>
               <th>Acción</th>
-   
-              
-              
+                      
              <th> <Button
           className="btn btn-success"
           onClick={() => {
@@ -163,21 +163,19 @@ export default class PlanApp extends Component {
             this.showModal();
           }}
         >
-          Nuevo Plan
+          Nuevo Grupo
         </Button></th>
             </tr>
           </thead>
           <tbody>
-            {this.state.plan.map((data) => {
+            {this.state.notas.map((data) => {
               return (
                 <tr >
-                  <td>{data.id_plan}</td>
-                  <td>{data.cant_acti}</td>
-                  <td>{data.cant_proce}</td>
-                  <td>{data.cant_conceptual}</td>
-                  <td>{data.id_grupo}</td>
+                  <td>{data.id_nota}</td>
+                  <td>{data.valor}</td>
+                  <td>{data.componente}</td>
                   <td>{data.id_materia}</td>
-
+                  <td>{data.matricula_estudiante}</td>
                   <td>
                     <button
                       className="btn btn-primary"
@@ -222,7 +220,7 @@ export default class PlanApp extends Component {
 
         <Modal show={this.state.show} animation={false}>
           <Modal.Header>
-            <Modal.Title>Nuevo Plan</Modal.Title>
+            <Modal.Title>Nuevo Grupo</Modal.Title>
           </Modal.Header>
           <Modal.Body>
            
@@ -242,7 +240,7 @@ export default class PlanApp extends Component {
               </Form.Group>
 
               <Form.Group as={Col} controlId="año">
-                <Form.Label>Cantidad actividad *</Form.Label>
+                <Form.Label>Año *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
@@ -259,7 +257,7 @@ export default class PlanApp extends Component {
             <Form.Row>
             
             <Form.Group as={Col} controlId="grupo">
-                <Form.Label>Cantidad procedimental *</Form.Label>
+                <Form.Label>Grupo *</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="7"
@@ -275,7 +273,7 @@ export default class PlanApp extends Component {
 
             <Form.Row>
               <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Cantidad proc</Form.Label>
+                <Form.Label>Código de grupo</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="5"
@@ -288,20 +286,7 @@ export default class PlanApp extends Component {
                 />
               </Form.Group>
               <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Código Grupo</Form.Label>
-                <Form.Control
-                  type="text"
-                  minLength="5"
-                  maxLength="11"
-                  placeholder="código del grupo"
-                  name="cod_grupo"
-                  //si el formulario tiene valores pongan o ponga vacio sino
-                  onChange={this.handleChange}
-                  value={form ? form.cod_grupo : ""}
-                />
-              </Form.Group>
-              <Form.Group as={Col} controlId="cod_grupo">
-                <Form.Label>Código Grupo</Form.Label>
+                <Form.Label>Código profesor</Form.Label>
                 <Form.Control
                   type="text"
                   minLength="5"
