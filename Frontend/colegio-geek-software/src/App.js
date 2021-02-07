@@ -17,6 +17,7 @@ import ProfileData from './components/user/ProfileData';
 import StudentApp from './components/student/StudentApp';
 import DocenteApp from './components/docente/DocenteApp';
 import GruposApp from './components/grupos/GruposApp';
+import PlanApp from './components/plan/PlanApp';
 
 export default class App extends Component { 
   render() {
@@ -37,6 +38,7 @@ export default class App extends Component {
             <Route path='/docente/grupo' exact render={(props) => <Main {...props} App = {this} contetent = {ProfileData}/>} />
             <Route exact path="/docente" component={DocenteApp} />
             <Route exact path="/grupos" component={GruposApp} />
+            <Route exact path="/plan" component={PlanApp} />
 
             <Route path='/estudiantes/listado' exact render={(props) => <Main {...props} App = {this} contetent = {StudentApp}/>} />
           </Switch>
