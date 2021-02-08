@@ -130,7 +130,7 @@ router.post('/new-nota', async (req, res) => {
                 id_nota: response.rows[0].id_nota,
                 valor: valor,
                 componente: componente,
-                id_matricula: id_matricula,
+                id_materia: id_materia,
                 matricula_estudiante: matricula_estudiante
             })
         } else {
@@ -176,14 +176,14 @@ router.post('/new-plan', async (req, res) => {
             id_plan, cant_acti, cant_proce, cant_conceptual,  id_grupo, id_materia
         } = req.body
         const client = await pool.connect()
-        const response = await client.query(`INSERT INTO plan (id_plan, cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia)  VALUES ($1, $2, $3, $4, $5,  $6) RETURNING id_plan`, [ id_plan, cant_acti, cant_proce, cant_conceptual,  id_grupo, id_materia])
+        const response = await client.query(`INSERT INTO plan (id_plan, cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia)  VALUES ($1, $2, $3, $4, $5, $6) RETURNING id_plan`, [ id_plan, cant_acti, cant_proce, cant_conceptual,  id_grupo, id_materia])
 
         // console.log(response)
         if (response.rowCount > 0) {
             res.json({
                 id_plan: response.rows[0].id_plan,
                 cant_acti: cant_acti,
-                cant_proce: can_proce,
+                cant_proce: cant_proce,
                 cant_conceptual: cant_conceptual,
                 id_grupo: id_grupo,
                 id_materia: id_materia
@@ -201,7 +201,7 @@ router.post('/new-plan', async (req, res) => {
 router.put("/updateplan/:id_plan", async (req, res) => {
     const { cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia } = req.body;
      const { id_plan } = req.params;
-
+2
     try {
         const client = await pool.connect();
         const rows = await client.query('UPDATE plan SET cant_acti=$2, cant_proce=$3, cant_conceptual=$4, id_grupo=$5, id_materia=$6 WHERE id_plan= $1', [id_plan, cant_acti, cant_proce, cant_conceptual, id_grupo, id_materia]);
