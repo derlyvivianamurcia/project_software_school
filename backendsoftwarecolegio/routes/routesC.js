@@ -791,7 +791,7 @@ router.get('/pdfreportenotasxgrupo/:id_cuenta', async (req, res) => {
 router.get("/adminmaterias", async (req, res) => {
   try {
     const client = await pg.connect();
-    const { rows } = await client.query(`SELECT materias.codmateria,
+    const { rows } = await client.query(`SELECT materias.id_materia,materias.codmateria,
     materias.strmateria,
     permisomateria(materias.id_materia ,1) as Primero,
     permisomateria(materias.id_materia ,2) as Segundo,
@@ -804,6 +804,7 @@ router.get("/adminmaterias", async (req, res) => {
     permisomateria(materias.id_materia ,9) as Noveno,
     permisomateria(materias.id_materia ,10) as Decimo,
     permisomateria(materias.id_materia ,11) as Once,
+    profesores.id_profesor,
     concat(cuenta.nombre,' ', cuenta.apellidos) as Profesor
     FROM materias join profesores 
     on profesores.id_profesor = materias.id_profesor join cuenta on  cuenta.id_cuenta = profesores.id_cuenta;`);
@@ -819,7 +820,7 @@ router.post("/adminmaterias", async (req, res) => {
     const client = await pg.connect();
     const { rows } = await client.query('INSERT INTO materias(codmateria, strmateria, id_profesor) VALUES($1,$2,$3) returning id_materia', [codmateria, strmateria, id_profesor]);
 
-    let query = 'INSERT INTO materias_en_grado(id_materia,id_grado,permiso) VALUES';
+    let query = 'INSERT INTO materias_en_grado(id_materia,id_grado,permiso) VALUES ';
     for (let i = 0; permisos.length > i; i++) {
       query += '(' + rows.id_materia + ', ' + (i + 1) + ', ' + permisos[i] + ')' + (i != (permisos.length - 1) ? ',' : ';');
     }
@@ -837,9 +838,9 @@ router.put("/adminmaterias/:id_materia", async (req, res) => {
     const client = await pg.connect();
     const rows = await client.query('UPDATE materias set codmateria=$1 , strmateria=$2, id_profesor=$3 WHERE  id_materia= $4', [codmateria, strmateria, id_profesor, id_materia]);
 
-    let query = 'UPDATE materias_en_grado set permiso = ';
+    let query = '';
     for (let i = 0; permisos.length > i; i++) {
-      query += permisos[i] + ' WHERE id_materia=' + id_materia + ' AND id_grado =' + (i + 1) + ';';
+      query += 'UPDATE materias_en_grado set permiso = '+permisos[i] + ' WHERE id_materia=' + id_materia + ' AND id_grado =' + (i + 1) + ';';
     }
     const rows2 = await client.query(query);
     res.json([rows, rows2]);
@@ -851,8 +852,8 @@ router.put("/adminmaterias/:id_materia", async (req, res) => {
 router.delete("/adminmaterias/:id_materia", async (req, res) => {
   const { id_materia } = req.params;
   try {
-    const client = await pg.connect(); 3
-    const rows = await client.query('DELETE materias WHERE id_materia= $1', [id_materia]);
+    const client = await pg.connect(); 
+    const rows = await client.query('DELETE FROM materias WHERE id_materia= $1', [id_materia]);
     res.json(rows);
     client.release();
   } catch (err) {
@@ -888,4 +889,17 @@ and cuenta.estado =true;
     res.json(err);
   }
 });
+
+router.get("/cuentas/:id_cuenta", async (req, res) => {
+  const { id_cuenta } = req.params;
+  try {
+    const client = await pg.connect(); 
+    const rows = await client.query('SELECT * from cuenta WHERE id_cuenta= $1', [id_cuenta]);
+    res.json(rows);
+    client.release();
+  } catch (err) {
+    res.json(err);
+  }
+});
+
 module.exports = router;

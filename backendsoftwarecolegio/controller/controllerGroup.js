@@ -32,7 +32,8 @@ controller.listGrupos = async(req, res) => {
     } catch (error) {
         console.log(error)
     }
-
+    client.release();
+}
 
 //Agregar grupo
 /*
@@ -172,4 +173,4 @@ controller.deleteGrupo = async (req, res) => {
     }
 };
 
-module.exports = controller;
+module.exports = controller
