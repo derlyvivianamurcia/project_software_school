@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Accordion, Card, Col, Row } from 'react-bootstrap'
-
+import axios from 'axios';
 export default class Module extends Component {
     render() {
         return (
@@ -60,7 +60,9 @@ export default class Module extends Component {
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="0" className="shadow-sm">
                                     <Card.Body>
-                                        <p className="font-italic mb-0 text-white">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.</p>
+                                        <p className="font-italic mb-0 text-white">
+                                            <input type="button" value="reporteesto"/>
+                                        </p>
                                     </Card.Body>
                                 </Accordion.Collapse>
                             </Card>
