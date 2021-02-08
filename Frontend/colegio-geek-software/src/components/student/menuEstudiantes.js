@@ -1,7 +1,7 @@
 import {BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import axios from 'axios'
-import PerfilEstudiante from '../containers/perfilEstudiante';
-import NotasEstudiante from '../containers/notas';
+import PerfilEstudiante from '.../containers/PerfilEstudiante';
+import NotasEstudiante from '.../containers/notas';
 import React, {Component} from 'react';
 
 class menuEstudiantes extends Component{

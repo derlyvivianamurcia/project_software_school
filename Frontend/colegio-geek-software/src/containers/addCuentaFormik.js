@@ -2,8 +2,6 @@ import React from 'react';
 import {withFormik, Field, ErrorMessage} from 'formik';
 import axios from 'axios';
 
-
-
 function Form(props) {
 
     const {

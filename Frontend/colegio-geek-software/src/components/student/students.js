@@ -1,10 +1,10 @@
 
-import ListStudent from '../containers/listStudentData';
-import SearchStudent from '../containers/SearchStudent';
-import EditStudent from '../containers/editStudent';
-import DeleteStudent from '../containers/deleteStudent';
-import AddStudentFormik from '../containers/addStudentFormik';
-import AddCuentaFormik from '../containers/addCuentaFormik';
+import ListStudent from '.../containers/listStudentData';
+import SearchStudent from '.../containers/SearchStudent';
+import EditStudent from '.../containers/editStudent';
+import DeleteStudent from '.../containers/deleteStudent';
+import AddStudentFormik from '.../containers/addStudentFormik';
+import AddCuentaFormik from '.../containers/AddCuentaFormik';
 
 function Students(){  
 
