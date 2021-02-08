@@ -5,7 +5,6 @@ import {
   faBriefcase,
   faPaperPlane,
   faQuestion,
-  faImage,
   faCopy
 } from "@fortawesome/free-solid-svg-icons";
 import SubMenu from "./SubMenu";
@@ -73,12 +72,6 @@ class SideBar extends React.Component {
           </Nav.Item>
 
 
-          <Nav.Item>
-            <Link to="/ayuda" className="nav-link">
-              <FontAwesomeIcon icon={faQuestion} className="mr-2" />
-              Ayuda
-            </Link>
-          </Nav.Item>
 
           <Nav.Item>
             <Link to="/soporte-tecnico" className="nav-link">

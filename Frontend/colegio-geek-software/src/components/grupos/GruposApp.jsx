@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button, Form, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Bar from "../Bar";
 
 const url = "http://localhost:4001/api/"
 
@@ -144,8 +145,9 @@ export default class GruposApp extends Component {
 
      
         <table className="table">
-       
+      
           <thead>
+              <Bar/>
           <h1 >Listado de Grupos</h1>
             <tr>
               <th>#</th>
@@ -333,7 +335,7 @@ export default class GruposApp extends Component {
 
         <Modal show={this.state.modalEliminar}>
           <Modal.Body>
-            Estás seguro que deseas eliminar a la empresa {form && form.nombre}
+            Estás seguro que deseas eliminar  {form && form.nombre}
           </Modal.Body>
           <Modal.Footer>
             <button
