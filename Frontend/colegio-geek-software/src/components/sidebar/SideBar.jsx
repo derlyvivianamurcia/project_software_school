@@ -12,8 +12,23 @@ import SubMenu from "./SubMenu";
 import { Nav, Image } from "react-bootstrap";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
-
+import Axios from "axios";
+let ruta ='http://localhost:4001/'
 class SideBar extends React.Component {
+  constructor(props){
+    super(props);
+    this.state={
+      cuenta:39,
+      cuenta2:{}
+    };
+  }
+  componentDidMount() {
+    Axios.get(ruta+'apic/cuentas/'+this.state.cuenta).then(res=>{
+      this.setState({cuenta2:res.data.rows});
+    }).catch(err=>{
+      console.log(err);
+    });;
+  }
   render() {
     return (
       <div className={classNames("sidebar", { "is-open": this.props.isOpen })}>
@@ -39,7 +54,17 @@ class SideBar extends React.Component {
               {text : "Plan de estudio", link:"/plan"}, 
             ]}
           />
-
+          {this.state.cuenta2[0]?.tipo_cuenta==3?<SubMenu
+            title="Administrador"
+            icon={faCopy}
+            items={[
+              {text : "Materias", link:'/materias'}, 
+              {text : "Reportes", link: '/reportes'}, 
+              {text : "Cambio de año", link:"/cambiodeaño"} 
+            ]}
+          />
+          :''}
+          
           <Nav.Item>
             <Link to="/modulos" className="nav-link">
               <FontAwesomeIcon icon={faBriefcase} className="mr-2" />
@@ -47,7 +72,6 @@ class SideBar extends React.Component {
             </Link>
           </Nav.Item>
 
-     
 
           <Nav.Item>
             <Link to="/ayuda" className="nav-link">

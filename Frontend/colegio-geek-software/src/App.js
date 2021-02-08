@@ -21,6 +21,9 @@ import GruposApp from './components/grupos/GruposApp';
 import PlanApp from './components/plan/PlanApp';
 import NotaApp from './components/nota/NotaApp';
 
+import Materia from './components/admin/materias';
+import Añocambio from './components/admin/añocambio';
+
 export default class App extends Component { 
   render() {
     return (
@@ -45,6 +48,8 @@ export default class App extends Component {
             <Route exact path="/plan" component={PlanApp} />
             <Route exact path="/notas" component={NotaApp} />
 
+            <Route exact path="/materias" component={Materia} />
+            <Route exact path="/cambiodeaño" component={Añocambio} />
 
             <Route path='/estudiantes/listado' exact render={(props) => <Main {...props} App = {this} contetent = {StudentApp}/>} />
           </Switch>
